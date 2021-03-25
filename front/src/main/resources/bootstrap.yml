@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: local # 기본 환경 선택
+
+---
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sp-mart-front
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/spmart?serverTimezone=UTC&useSSL=false
+    username: root
+    password: qwert12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://3.34.76.99:8761/eureka
+
+logging:
+  level:
+    org.hibernate.SQL: debug
