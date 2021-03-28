@@ -1,4 +1,4 @@
-package com.sp.presentation.model
+package com.sp.domain.model
 
 import javax.persistence.*
 

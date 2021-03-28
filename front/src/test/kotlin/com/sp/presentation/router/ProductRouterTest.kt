@@ -1,7 +1,12 @@
 package com.sp.presentation.router
 
+import com.ninjasquad.springmockk.*
+import com.sp.application.*
+import com.sp.domain.model.Product
 import com.sp.presentation.handler.ProductHandler
-import org.junit.jupiter.api.Assertions.*
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,18 +26,23 @@ import org.springframework.test.web.reactive.server.WebTestClient
 internal class ProductRouterTest(private val context: ApplicationContext){
     private lateinit var webTestClient: WebTestClient
 
+    @MockkBean
+    private lateinit var productService: ProductService
+
     @BeforeEach
     fun setup(restDocumentation: RestDocumentationContextProvider) {
         webTestClient = WebTestClient.bindToApplicationContext(context)
             .configureClient()
-            .baseUrl("http://localhost:8080")
+            .baseUrl("http://localhost:8888")
             .filter(WebTestClientRestDocumentation.documentationConfiguration(restDocumentation))
             .build()
     }
 
     @Test
-    fun `FooRouter findAll`() {
+    fun `findAll`() {
 
+        every { productService.findAllProducts() } returns mockk()
+        
         webTestClient.get()
             .uri("/product")
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)

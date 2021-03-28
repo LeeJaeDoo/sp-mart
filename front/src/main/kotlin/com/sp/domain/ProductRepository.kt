@@ -1,6 +1,6 @@
-package com.sp.repository
+package com.sp.domain
 
-import com.sp.presentation.model.Product
+import com.sp.domain.model.Product
 import org.springframework.data.jpa.repository.JpaRepository
 import reactor.core.publisher.*
 
