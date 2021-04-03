@@ -2,10 +2,10 @@ package com.sp.presentation.router
 
 import com.ninjasquad.springmockk.*
 import com.sp.application.*
-import com.sp.domain.model.Product
+import com.sp.domain.product.entity.Product
 import com.sp.presentation.handler.ProductHandler
+import com.sp.presentation.request.ProductRegisterRequest
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -33,21 +33,44 @@ internal class ProductRouterTest(private val context: ApplicationContext){
     fun setup(restDocumentation: RestDocumentationContextProvider) {
         webTestClient = WebTestClient.bindToApplicationContext(context)
             .configureClient()
-            .baseUrl("http://localhost:8888")
+            .baseUrl("http://localhost:8080")
             .filter(WebTestClientRestDocumentation.documentationConfiguration(restDocumentation))
             .build()
     }
 
     @Test
-    fun `findAll`() {
-
-        every { productService.findAllProducts() } returns mockk()
+    fun `상품 전체 조회`() {
+        val product = Product(
+            name = "꼬북칩",
+            price = 1500
+        )
+        coEvery { productService.findAllProducts() } returns listOf(product)
         
         webTestClient.get()
-            .uri("/product")
+            .uri("/backend/product")
+            .header("Version", "1.0")
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk
+    }
+
+    @Test
+    fun `부모 상품 등록`() {
+        val request = ProductRegisterRequest(
+            name = "꼬북칩",
+            price = 1500
+        )
+
+        coEvery { productService.registerProduct(any()) } returns 1L
+
+        webTestClient.post()
+            .uri("/backend/product")
+            .header("Version", "1.0")
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .exchange()
+            .expectStatus().isCreated
     }
 }

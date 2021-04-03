@@ -1,10 +1,6 @@
 package com.sp.domain
 
-import com.sp.domain.model.Product
+import com.sp.domain.product.entity.Product
 import org.springframework.data.jpa.repository.JpaRepository
-import reactor.core.publisher.*
 
-interface ProductRepository : JpaRepository<Product, Long>{
-    override fun findAll(): MutableList<Product>
-    suspend fun findByTitle(title: String): Mono<Product>
-}
+interface ProductRepository : JpaRepository<Product, Long>

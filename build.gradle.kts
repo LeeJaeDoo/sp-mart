@@ -91,6 +91,11 @@ subprojects {
 		}
 		kapt("com.querydsl:querydsl-apt:${querydslVersion}:jpa")
 
+		// JSON
+		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+		implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+		implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
+
 		dependencyManagement {
 			imports {
 				mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
@@ -102,7 +107,7 @@ subprojects {
 	if (project.name != "core") {
 
 		dependencies {
-
+			implementation(project(":core"))
 			kapt("org.springframework.boot:spring-boot-configuration-processor")
 			// Spring Boot
 			implementation("org.springframework.boot:spring-boot-starter-webflux")

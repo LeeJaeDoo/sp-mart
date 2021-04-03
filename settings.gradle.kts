@@ -1,2 +1,2 @@
 rootProject.name = "sp-mart"
-include("front", "internal")
+include("core","front", "internal")
