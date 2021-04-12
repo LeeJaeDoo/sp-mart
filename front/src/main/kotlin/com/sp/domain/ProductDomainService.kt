@@ -2,9 +2,9 @@ package com.sp.domain
 
 import com.sp.domain.product.entity.Product
 import com.sp.presentation.request.ProductRegisterRequest
+import org.springframework.data.repository.*
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
-import java.util.*
+import org.springframework.transaction.annotation.*
 
 @Service
 class ProductDomainService(private val productRepository: ProductRepository) {
@@ -13,13 +13,13 @@ class ProductDomainService(private val productRepository: ProductRepository) {
         return productRepository.findAll()
     }
 
-    suspend fun findById(id: Long): Optional<Product> {
-        return productRepository.findById(id)
+    suspend fun findById(id: Long): Product? {
+        return productRepository.findByIdOrNull(id)
     }
 
-    suspend fun register(params: ProductRegisterRequest): Long {
-        return productRepository.save(Product.create(params.valueOf())).no
-    }
+//    suspend fun register(params: ProductRegisterRequest): Long {
+//        return productRepository.save(Product.create(params.valueOf())).no
+//    }
 }
 
 

@@ -1,29 +1,33 @@
 package com.sp.application
 
-import com.sp.domain.ProductDomainService
-import com.sp.domain.product.entity.Product
+import com.sp.domain.*
+import com.sp.domain.product.entity.*
 import com.sp.presentation.request.ProductRegisterRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
+import org.springframework.transaction.support.*
 
 
 @Service
-@Transactional(readOnly = true)
 class ProductService(
-    private val productDomainService: ProductDomainService
+    private val productDomainService: ProductDomainService,
+    private val transactionTemplate: TransactionTemplate,
+    private val storeProductRepository: StoreProductRepository
 ) {
-    @Transactional
-    suspend fun findAllProducts():List<Product> {
+
+    @Transactional(readOnly = true)
+    suspend fun findAllProducts():List<Product>? {
         return productDomainService.findAllProducts()
     }
 
-    suspend fun findById(id: Long): Optional<Product> {
+    suspend fun findById(id: Long): Product? {
         return productDomainService.findById(id)
     }
 
     suspend fun registerProduct(params: ProductRegisterRequest): Long {
-        return productDomainService.register(params)
+        return transactionTemplate.execute {
+            storeProductRepository.save(StoreProduct.create(params.valueOf())).storeProductNo
+        }!!
     }
 
 }

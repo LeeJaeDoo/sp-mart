@@ -5,17 +5,19 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "store")
-class Store (name: String, address: String){
+data class Store (
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_no")
-    var no: Long? = null
+    var no: Long? = null,
 
     @Column(name = "name")
-    var name: String = name
+    val name: String,
 
     @Column(name= "address")
-    var address: String = address
+    val address: String
+){
 
     @OneToMany(mappedBy = "store")
     var storeProduct: List<StoreProduct>? = null
