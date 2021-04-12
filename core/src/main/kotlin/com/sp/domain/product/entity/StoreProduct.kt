@@ -1,6 +1,7 @@
 package com.sp.domain.product.entity
 
-import java.util.*
+import com.sp.domain.product.entity.model.*
+import java.time.*
 import javax.persistence.*
 
 @Entity
@@ -12,24 +13,24 @@ class StoreProduct (product: Product, store: Store){
     @Column(name = "store_product_no")
     var storeProductNo: Long? = null
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_no")
     var product: Product = product
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_no")
     var store: Store = store
 
     @Column(name = "reg_date")
-    var regDate: Date? = null
+    var regDate: LocalDateTime? = LocalDateTime.now()
 
     @Column(name = "mod_date")
-    var modDate: Date? = null
+    var modDate: LocalDateTime? = null
 
     companion object{
-        fun create(product:Product, store: Store) = StoreProduct(
-            product = product,
-            store = store
+        fun create(params: StoreProductRegisterModel) = StoreProduct(
+            product = Product.create(params.product),
+            store = Store.create(params.store)
         )
     }
 }
