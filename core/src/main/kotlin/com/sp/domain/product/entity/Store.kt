@@ -17,9 +17,6 @@ class Store (name: String, address: String){
     @Column(name= "address")
     var address: String = address
 
-    @OneToMany(mappedBy = "store")
-    var storeProduct: List<StoreProduct>? = null
-
     companion object {
         fun create(param: StoreRegisterModel) = Store(
             name = param.name,

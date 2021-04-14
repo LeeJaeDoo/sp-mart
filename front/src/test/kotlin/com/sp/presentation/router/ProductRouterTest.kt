@@ -3,10 +3,11 @@ package com.sp.presentation.router
 import com.ninjasquad.springmockk.*
 import com.sp.application.*
 import com.sp.domain.product.entity.Product
+import com.sp.domain.product.entity.StoreProduct
 import com.sp.presentation.handler.ProductHandler
+import com.sp.presentation.handler.StoreProductHandler
 import com.sp.presentation.request.ProductRegisterRequest
 import io.mockk.coEvery
-import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,12 +23,15 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @WebFluxTest
 @ExtendWith(RestDocumentationExtension::class)
-@ContextConfiguration(classes = [ProductRouter::class, ProductHandler::class])
+@ContextConfiguration(classes = [ProductRouter::class, ProductHandler::class, StoreProductHandler::class])
 internal class ProductRouterTest(private val context: ApplicationContext){
     private lateinit var webTestClient: WebTestClient
 
     @MockkBean
     private lateinit var productService: ProductService
+
+    @MockkBean
+    private lateinit var storeProductService: StoreProductService
 
     @BeforeEach
     fun setup(restDocumentation: RestDocumentationContextProvider) {
@@ -37,24 +41,6 @@ internal class ProductRouterTest(private val context: ApplicationContext){
             .filter(WebTestClientRestDocumentation.documentationConfiguration(restDocumentation))
             .build()
     }
-
-    @Test
-    fun `상품 전체 조회`() {
-        val product = Product(
-            name = "꼬북칩",
-            price = 1500
-        )
-        coEvery { productService.findAllProducts() } returns listOf(product)
-        
-        webTestClient.get()
-            .uri("/backend/product")
-            .header("Version", "1.0")
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .accept(MediaType.APPLICATION_JSON)
-            .exchange()
-            .expectStatus().isOk
-    }
-
     @Test
     fun `부모 상품 등록`() {
         val request = ProductRegisterRequest(
@@ -72,5 +58,20 @@ internal class ProductRouterTest(private val context: ApplicationContext){
             .bodyValue(request)
             .exchange()
             .expectStatus().isCreated
+    }
+
+    @Test
+    fun `상품명으로 상점 리스트 조회`() {
+        val productName = "koko"
+
+        coEvery { storeProductService.getStoreList(any()) } returns listOf()
+
+        webTestClient.get()
+            .uri("/backend/product/"+productName)
+            .header("Version", "1.0")
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isOk
     }
 }
