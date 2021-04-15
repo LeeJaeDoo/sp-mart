@@ -1,12 +1,10 @@
 package com.sp.domain.storeProduct
 
-import com.ninjasquad.springmockk.MockkBean
 import com.querydsl.jpa.impl.JPAQueryFactory
-import com.sp.application.StoreProductService
-import com.sp.domain.extensions.toJson
-import com.sp.domain.product.entity.QStoreProduct
+import org.junit.jupiter.api.Assertions.*
+import com.sp.domain.product.entity.StoreProduct
 import com.sp.infrastructure.queryDslConfig
-import io.mockk.impl.annotations.MockK
+import com.sp.presentation.request.StoreProductRegisterRequest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,8 +24,10 @@ import javax.annotation.Resource
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ComponentScan(useDefaultFilters = false, includeFilters = [ComponentScan.Filter(Repository::class)])
 @Import(queryDslConfig::class)
-class StoreProductRepositoryImplTest{
-    private lateinit var spRepositoryImpl: StoreProductRepositoryImpl
+class StoreProductRepositoryImplTest(
+    val storeProductRepository: StoreProductRepository
+) {
+    private lateinit var spRepositoryImpl: StoreProductRepositorySupport
 
     @Autowired
     @Resource(name = "jpaQueryFactory")
@@ -35,7 +35,7 @@ class StoreProductRepositoryImplTest{
 
     @BeforeEach
     fun setUp(){
-        spRepositoryImpl = StoreProductRepositoryImpl(query)
+        spRepositoryImpl = StoreProductRepositorySupport(query)
     }
     @Test
     fun `상품명으로 상점 리스트 조회`(){
@@ -45,5 +45,27 @@ class StoreProductRepositoryImplTest{
         //then
         Assertions.assertEquals(storeList.get(0).store.name, "GS25")
         Assertions.assertEquals(storeList.get(0).store.address, "고척1동")
+    }
+
+    @Test
+    fun `상품 상점 등록`(){
+        //given
+        val storeProduct = StoreProductRegisterRequest(
+            productName= "초코맛",
+            storeName= "GS24",
+            address= "고척1동",
+            price= 1500,
+            parentNo= 1L,
+            count= 2
+        )
+
+        //when
+        val saved = storeProductRepository.save(StoreProduct.create(storeProduct.valueOf())).storeProductNo!!
+
+        //then
+        val result = storeProductRepository.findById(saved).get()
+        assertEquals(storeProduct.address, result.store.address)
+        assertEquals(storeProduct.productName, result.product.name)
+        assertEquals(storeProduct.price, result.product.price)
     }
 }

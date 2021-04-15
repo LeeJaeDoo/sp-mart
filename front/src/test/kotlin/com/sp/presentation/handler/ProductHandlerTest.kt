@@ -36,7 +36,8 @@ internal class ProductHandlerTest {
     fun `상품등록`() {
         val requestBody = ProductRegisterRequest(
             name = "꼬북칩",
-            price = 1500
+            price = 1500,
+            parentNo=1L
         )
         val request = MockServerHttpRequest
             .post("/backend/product")

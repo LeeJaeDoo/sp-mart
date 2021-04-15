@@ -13,7 +13,7 @@ import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 
 @Repository
-class StoreProductRepositoryImpl(
+class StoreProductRepositorySupport(
     @Autowired
     @Resource(name = "jpaQueryFactory")
     var query : JPAQueryFactory

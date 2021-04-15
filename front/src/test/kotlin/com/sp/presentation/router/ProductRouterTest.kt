@@ -2,11 +2,10 @@ package com.sp.presentation.router
 
 import com.ninjasquad.springmockk.*
 import com.sp.application.*
-import com.sp.domain.product.entity.Product
-import com.sp.domain.product.entity.StoreProduct
 import com.sp.presentation.handler.ProductHandler
 import com.sp.presentation.handler.StoreProductHandler
 import com.sp.presentation.request.ProductRegisterRequest
+import com.sp.presentation.request.StoreProductRegisterRequest
 import io.mockk.coEvery
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -45,7 +44,8 @@ internal class ProductRouterTest(private val context: ApplicationContext){
     fun `부모 상품 등록`() {
         val request = ProductRegisterRequest(
             name = "꼬북칩",
-            price = 1500
+            price = 1500,
+            parentNo = 1L
         )
 
         coEvery { productService.registerProduct(any()) } returns 1L
@@ -73,5 +73,28 @@ internal class ProductRouterTest(private val context: ApplicationContext){
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
             .expectStatus().isOk
+    }
+
+    @Test
+    fun `상품 상점 등록`(){
+        val request = StoreProductRegisterRequest(
+            productName= "초코맛",
+            storeName= "GS24",
+            address= "고척1동",
+            price= 1500,
+            parentNo= 1L,
+            count= 2
+        )
+
+        coEvery { storeProductService.register(any()) } returns 1L
+
+        webTestClient.post()
+            .uri("/backend/product/storeProduct")
+            .header("Version", "1.0")
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .exchange()
+            .expectStatus().isCreated
     }
 }

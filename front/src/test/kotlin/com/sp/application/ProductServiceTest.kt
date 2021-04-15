@@ -1,6 +1,6 @@
 package com.sp.application
 
-import com.sp.domain.ProductDomainService
+import com.sp.domain.product.ProductDomainService
 import com.sp.presentation.request.*
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
@@ -8,7 +8,6 @@ import io.mockk.junit5.*
 import kotlinx.coroutines.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.*
-import org.junit.jupiter.api.Assertions.*
 
 /**
  * @author sojeong park
@@ -30,7 +29,8 @@ internal class ProductServiceTest {
         //given
         val request = ProductRegisterRequest(
             name = "koko",
-            price = 1500
+            price = 1500,
+            parentNo = 1L
         )
 
         //when

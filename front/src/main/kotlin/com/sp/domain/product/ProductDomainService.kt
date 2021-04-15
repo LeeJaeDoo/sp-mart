@@ -1,9 +1,8 @@
-package com.sp.domain
+package com.sp.domain.product
 
 import com.sp.domain.product.entity.Product
 import com.sp.presentation.request.ProductRegisterRequest
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service

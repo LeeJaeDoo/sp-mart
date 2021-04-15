@@ -4,4 +4,4 @@ import com.sp.domain.product.entity.StoreProduct
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.querydsl.QuerydslPredicateExecutor
 
-interface StoreProducRespository: JpaRepository<StoreProduct, Long>, QuerydslPredicateExecutor<StoreProduct>
+interface StoreProductRepository: JpaRepository<StoreProduct, Long>, QuerydslPredicateExecutor<StoreProduct>

@@ -1,9 +1,9 @@
-package com.sp.domain
+package com.sp.domain.product
 
+import com.sp.domain.product.ProductRepository
 import com.sp.domain.product.entity.Product
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
 import org.springframework.boot.test.autoconfigure.jdbc.*
 import org.springframework.boot.test.autoconfigure.orm.jpa.*
 import org.springframework.context.annotation.*
