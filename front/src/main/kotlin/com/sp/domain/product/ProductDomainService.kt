@@ -1,7 +1,7 @@
 package com.sp.domain.product
 
 import com.sp.domain.product.entity.Product
-import com.sp.presentation.request.ProductRegisterRequest
+import com.sp.domain.product.entity.model.ProductRegisterModel
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -16,8 +16,8 @@ class ProductDomainService(private val productRepository: ProductRepository) {
         return productRepository.findById(id)
     }
 
-    suspend fun register(params: ProductRegisterRequest): Long {
-        return productRepository.save(Product.create(params.valueOf())).no
+    suspend fun register(params: ProductRegisterModel): Long {
+        return productRepository.save(Product.create(params)).no
     }
 }
 

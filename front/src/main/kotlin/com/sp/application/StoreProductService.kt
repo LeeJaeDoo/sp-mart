@@ -1,24 +1,26 @@
 package com.sp.application
 
+import com.sp.application.model.StoreProductRegisterApplicationModel
 import com.sp.domain.product.entity.StoreProduct
-import com.sp.domain.storeProduct.StoreProductRepository
-import com.sp.domain.storeProduct.StoreProductRepositorySupport
-import com.sp.presentation.request.ProductRegisterRequest
-import com.sp.presentation.request.StoreProductRegisterRequest
+import com.sp.domain.storeProduct.StoreProductDomainService
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.server.ServerRequest
+import org.springframework.transaction.support.TransactionTemplate
 
 @Service
 class StoreProductService(
-    private val spRepository: StoreProductRepository,
-    private val spRepositorySupport: StoreProductRepositorySupport
+    private val storeProductDomainService: StoreProductDomainService,
+    private val transactionTemplate: TransactionTemplate,
+
     ) {
 
-    suspend fun register(params: StoreProductRegisterRequest): Long {
-        return spRepository.save(StoreProduct.create(params.valueOf())).storeProductNo!!
+    suspend fun register(params: StoreProductRegisterApplicationModel): Long {
+        return storeProductDomainService.register(params.valueOf())
     }
 
-    suspend fun getStoreList(name: String): List<StoreProduct> {
-        return spRepositorySupport.getStoreList(name, 2L)
+    suspend fun getStoreList(productNo: Long): List<StoreProduct> {
+        val allProductStoreList = storeProductDomainService.getStoreList(productNo)
+        return transactionTemplate.execute {
+            allProductStoreList
+        }!!
     }
 }
