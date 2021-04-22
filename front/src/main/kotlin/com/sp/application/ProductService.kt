@@ -1,6 +1,6 @@
 package com.sp.application
 
-import com.sp.application.model.productRegisterApplicationModel
+import com.sp.application.model.ProductRegisterApplicationModel
 import com.sp.domain.product.ProductDomainService
 import com.sp.domain.product.entity.Product
 import org.springframework.stereotype.Service
@@ -11,7 +11,7 @@ class ProductService(
     private val productDomainService: ProductDomainService,
     private val transactionTemplate: TransactionTemplate,
 ) {
-    suspend fun registerProduct(params: productRegisterApplicationModel): Long {
+    suspend fun registerProduct(params: ProductRegisterApplicationModel): Long {
         return productDomainService.register(params.valueOf())
     }
 

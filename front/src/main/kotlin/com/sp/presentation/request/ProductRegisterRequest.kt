@@ -1,6 +1,6 @@
 package com.sp.presentation.request
 
-import com.sp.application.model.productRegisterApplicationModel
+import com.sp.application.model.ProductRegisterApplicationModel
 
 
 data class ProductRegisterRequest(
@@ -8,7 +8,7 @@ data class ProductRegisterRequest(
     val price: Int,
     val parentNo: Long
 ) {
-    fun valueOf() = productRegisterApplicationModel(
+    fun valueOf() = ProductRegisterApplicationModel(
         name = name,
         price = price,
         parentNo = parentNo
