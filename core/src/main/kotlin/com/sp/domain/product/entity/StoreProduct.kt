@@ -1,35 +1,44 @@
 package com.sp.domain.product.entity
 
-import java.util.*
+import com.sp.domain.product.entity.model.StoreProductRegisterModel
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
 @Table(name = "store_product")
-class StoreProduct (product: Product, store: Store){
-
+class StoreProduct (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_product_no")
-    var storeProductNo: Long? = null
+    var storeProductNo: Long? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    var product: Product = product
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_no")
+    var product: Product,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    var store: Store = store
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinColumn(name="store_no")
+    var store: Store,
 
     @Column(name = "reg_date")
-    var regDate: Date? = null
+    var regDate: LocalDateTime? = LocalDateTime.now(),
 
     @Column(name = "mod_date")
-    var modDate: Date? = null
+    var modDate: LocalDateTime? = LocalDateTime.now(),
 
+    @Column(name = "count")
+    var count: Int? = 0,
+
+    @Column(name = "member_no")
+    var memberNo: Long? = 0
+
+    ){
     companion object{
-        fun create(product:Product, store: Store) = StoreProduct(
-            product = product,
-            store = store
+        fun create(params: StoreProductRegisterModel) = StoreProduct(
+            product = Product.create(params.product),
+            store = Store.create(params.store),
+            count = params.count,
+            memberNo = params.memberNo
         )
     }
 }

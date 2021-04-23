@@ -5,29 +5,27 @@ import javax.persistence.*
 
 @Entity
 @Table( name = "product" )
-class Product (name: String, price: Int){
+class Product (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_no")
-    var no: Long = 0
+    var no: Long = 0,
 
     @Column(name="parent_no")
-    var parentNo: Long? = null
+    var parentNo: Long? = null,
 
     @Column(name = "name")
-    var name: String = name
+    var name: String,
 
     @Column(name = "price")
-    var price: Int = price
-
-    @OneToMany(mappedBy = "product")
-    var storeProduct: List<StoreProduct>? = null
+    var price: Int
+        ) {
 
     companion object{
         fun create(param: ProductRegisterModel) = Product(
             name = param.name,
-            price = param.price
+            price = param.price,
+            parentNo = param.parentNo
         )
     }
-
 }

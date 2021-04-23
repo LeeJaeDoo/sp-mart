@@ -36,7 +36,8 @@ internal class ProductHandlerTest {
     fun `상품등록`() {
         val requestBody = ProductRegisterRequest(
             name = "꼬북칩",
-            price = 1500
+            price = 1500,
+            parentNo=1L
         )
         val request = MockServerHttpRequest
             .post("/backend/product")
@@ -56,5 +57,25 @@ internal class ProductHandlerTest {
         assertEquals(HttpStatus.CREATED, response.statusCode())
 
         coVerify { productService.registerProduct(any()) }
+    }
+
+    @Test
+    fun `상품 전체 조회`(){
+        val request = MockServerHttpRequest
+            .get("/backend/product")
+
+        val exchange = MockServerWebExchange
+            .from(request)
+            .let{ ServerRequest.create(it, HandlerStrategies.withDefaults().messageReaders()) }
+
+        coEvery { productService.getAllProductList() } returns listOf()
+
+        //when
+        val response = runBlocking { productHandler.getAllProductList(exchange) }
+
+        //then
+        assertEquals(HttpStatus.OK, response.statusCode())
+
+        coVerify { productService.getAllProductList() }
     }
 }
