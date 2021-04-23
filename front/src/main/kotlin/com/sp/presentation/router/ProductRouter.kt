@@ -19,7 +19,19 @@ class ProductRouter(
             ("/backend/product" and headers { "1.0" in it.header("Version") }).nest {
                 accept(MediaType.APPLICATION_JSON).nest {
                     POST("", productHandler::register)
-                    GET("/{name}", storeProductHandler::getStoreList)
+                    GET("/list", productHandler::getAllProductList)
+                }
+            }
+        }
+    }
+
+    @Bean
+    fun routeStoreProductGet(): RouterFunction<ServerResponse> {
+        return coRouter {
+            ("/backend/storeProduct" and headers { "1.0" in it.header("Version") }).nest {
+                accept(MediaType.APPLICATION_JSON).nest {
+                    POST("", storeProductHandler::register)
+                    GET("/{id}", storeProductHandler::getStoreList)
                 }
             }
         }

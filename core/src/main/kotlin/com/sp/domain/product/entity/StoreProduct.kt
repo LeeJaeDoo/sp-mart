@@ -27,14 +27,18 @@ class StoreProduct (
     var modDate: LocalDateTime? = LocalDateTime.now(),
 
     @Column(name = "count")
-    var count: Int? = 0
+    var count: Int? = 0,
+
+    @Column(name = "member_no")
+    var memberNo: Long? = 0
 
     ){
     companion object{
         fun create(params: StoreProductRegisterModel) = StoreProduct(
             product = Product.create(params.product),
             store = Store.create(params.store),
-            count = params.count
+            count = params.count,
+            memberNo = params.memberNo
         )
     }
 }

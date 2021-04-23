@@ -1,13 +1,16 @@
 package com.sp.presentation.request
 
-import com.sp.domain.product.entity.model.ProductRegisterModel
+import com.sp.application.model.ProductRegisterApplicationModel
+
 
 data class ProductRegisterRequest(
     val name: String,
-    val price: Int
+    val price: Int,
+    val parentNo: Long
 ) {
-    fun valueOf() = ProductRegisterModel(
+    fun valueOf() = ProductRegisterApplicationModel(
         name = name,
-        price = price
+        price = price,
+        parentNo = parentNo
     )
 }

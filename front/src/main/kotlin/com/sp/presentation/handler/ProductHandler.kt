@@ -13,7 +13,11 @@ class ProductHandler (
 ) {
     suspend fun register(request: ServerRequest): ServerResponse {
         val params = request.awaitBody<ProductRegisterRequest>()
-        val memberNo = productService.registerProduct(params)
-        return created(URI.create(memberNo.toString())).buildAndAwait()
+        val productNo = productService.registerProduct(params.valueOf())
+        return created(URI.create(productNo.toString())).buildAndAwait()
     }
+
+    suspend fun getAllProductList(request: ServerRequest): ServerResponse =
+        ServerResponse.ok().json().bodyValueAndAwait(productService.getAllProductList())
+
 }

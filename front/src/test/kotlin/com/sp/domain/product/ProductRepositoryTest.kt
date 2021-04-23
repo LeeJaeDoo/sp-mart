@@ -1,9 +1,9 @@
-package com.sp.domain
+package com.sp.domain.product
 
+import com.sp.domain.product.ProductRepository
 import com.sp.domain.product.entity.Product
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
 import org.springframework.boot.test.autoconfigure.jdbc.*
 import org.springframework.boot.test.autoconfigure.orm.jpa.*
 import org.springframework.context.annotation.*
@@ -34,5 +34,12 @@ class ProductRepositoryTest(
         assertEquals(product.no, result.no)
         assertEquals(product.name, result.name)
         assertEquals(product.price, result.price)
+    }
+
+    @Test
+    fun `상품 전체 조회`(){
+        val result = productRepository.findAll()
+
+        println(result.size)
     }
 }

@@ -24,7 +24,8 @@ class Product (
     companion object{
         fun create(param: ProductRegisterModel) = Product(
             name = param.name,
-            price = param.price
+            price = param.price,
+            parentNo = param.parentNo
         )
     }
 }
