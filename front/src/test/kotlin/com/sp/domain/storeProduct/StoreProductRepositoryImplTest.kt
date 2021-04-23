@@ -1,10 +1,10 @@
 package com.sp.domain.storeProduct
 
 import com.querydsl.jpa.impl.JPAQueryFactory
+import com.sp.application.model.StoreProductRegisterApplicationModel
 import org.junit.jupiter.api.Assertions.*
 import com.sp.domain.product.entity.StoreProduct
 import com.sp.infrastructure.queryDslConfig
-import com.sp.presentation.request.StoreProductRegisterRequest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,7 +27,7 @@ import javax.annotation.Resource
 class StoreProductRepositoryImplTest(
     val storeProductRepository: StoreProductRepository
 ) {
-    private lateinit var spRepositoryImpl: StoreProductRepositorySupport
+    private lateinit var spRepositoryImpl: StoreProductRepositoryImpl
 
     @Autowired
     @Resource(name = "jpaQueryFactory")
@@ -35,12 +35,12 @@ class StoreProductRepositoryImplTest(
 
     @BeforeEach
     fun setUp(){
-        spRepositoryImpl = StoreProductRepositorySupport(query)
+        spRepositoryImpl = StoreProductRepositoryImpl(query)
     }
     @Test
-    fun `상품명으로 상점 리스트 조회`(){
+    fun `상품 no로 상점 리스트 조회`(){
         //when
-        val storeList = spRepositoryImpl.getStoreList("koko", 1L)
+        val storeList = spRepositoryImpl.getStoreList(1L)
 
         //then
         Assertions.assertEquals(storeList.get(0).store.name, "GS25")
@@ -50,15 +50,15 @@ class StoreProductRepositoryImplTest(
     @Test
     fun `상품 상점 등록`(){
         //given
-        val storeProduct = StoreProductRegisterRequest(
+        val storeProduct = StoreProductRegisterApplicationModel(
             productName= "초코맛",
             storeName= "GS24",
             address= "고척1동",
             price= 1500,
             parentNo= 1L,
-            count= 2
+            count= 2,
+            memberNo = 1L
         )
-
         //when
         val saved = storeProductRepository.save(StoreProduct.create(storeProduct.valueOf())).storeProductNo!!
 

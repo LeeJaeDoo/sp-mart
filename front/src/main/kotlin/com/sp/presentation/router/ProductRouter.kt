@@ -19,7 +19,7 @@ class ProductRouter(
             ("/backend/product" and headers { "1.0" in it.header("Version") }).nest {
                 accept(MediaType.APPLICATION_JSON).nest {
                     POST("", productHandler::register)
-                    GET("/allList", productHandler::getAllProductList)
+                    GET("/list", productHandler::getAllProductList)
                 }
             }
         }

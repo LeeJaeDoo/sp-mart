@@ -58,4 +58,24 @@ internal class ProductHandlerTest {
 
         coVerify { productService.registerProduct(any()) }
     }
+
+    @Test
+    fun `상품 전체 조회`(){
+        val request = MockServerHttpRequest
+            .get("/backend/product")
+
+        val exchange = MockServerWebExchange
+            .from(request)
+            .let{ ServerRequest.create(it, HandlerStrategies.withDefaults().messageReaders()) }
+
+        coEvery { productService.getAllProductList() } returns listOf()
+
+        //when
+        val response = runBlocking { productHandler.getAllProductList(exchange) }
+
+        //then
+        assertEquals(HttpStatus.OK, response.statusCode())
+
+        coVerify { productService.getAllProductList() }
+    }
 }

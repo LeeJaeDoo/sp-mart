@@ -35,4 +35,11 @@ class ProductRepositoryTest(
         assertEquals(product.name, result.name)
         assertEquals(product.price, result.price)
     }
+
+    @Test
+    fun `상품 전체 조회`(){
+        val result = productRepository.findAll()
+
+        println(result.size)
+    }
 }

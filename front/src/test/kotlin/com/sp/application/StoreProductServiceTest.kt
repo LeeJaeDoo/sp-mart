@@ -1,33 +1,34 @@
 package com.sp.application
 
-import com.ninjasquad.springmockk.MockkBean
-import com.sp.domain.product.entity.StoreProduct
-import com.sp.domain.storeProduct.StoreProductRepository
-import com.sp.domain.storeProduct.StoreProductRepositorySupport
-import com.sp.presentation.request.ProductRegisterRequest
-import com.sp.presentation.request.StoreProductRegisterRequest
+import com.sp.application.model.StoreProductRegisterApplicationModel
+import com.sp.domain.storeProduct.StoreProductDomainService
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.transaction.support.*
 
 @ExtendWith(MockKExtension::class)
 internal class StoreProductServiceTest {
     @MockK
-    private lateinit var storeProductRepositorySupport: StoreProductRepositorySupport
-
-    @MockK
-    private lateinit var spRepository: StoreProductRepository
+    private lateinit var storeProductDomainService: StoreProductDomainService
 
     private lateinit var storeProductService: StoreProductService
 
+    @MockK
+    private lateinit var transactionTemplate: TransactionTemplate
+
     @BeforeEach
     fun setUp(){
-        storeProductService = StoreProductService(spRepository, storeProductRepositorySupport)
+        storeProductService = StoreProductService(storeProductDomainService, transactionTemplate)
+
+        every { transactionTemplate.execute(any<TransactionCallback<*>>()) } answers {
+            (firstArg() as TransactionCallback<*>).doInTransaction(mockk())
+        }
     }
 
     @Test
@@ -35,29 +36,28 @@ internal class StoreProductServiceTest {
         //given
 
         //when
-        coEvery { storeProductRepositorySupport.getStoreList(any(), 1L) } returns listOf()
-        runBlocking { storeProductService.getStoreList("koko") }
+        coEvery { storeProductService.getStoreList(any()) } returns listOf()
+        runBlocking { storeProductService.getStoreList(1L) }
 
         //then
-        coVerify { storeProductService.getStoreList("koko") }
+        coVerify { storeProductService.getStoreList(1L) }
     }
 
     @Test
     fun `상품 상점 등록`(){
         //given
-        val storeProduct = StoreProductRegisterRequest(
+        val storeProduct = StoreProductRegisterApplicationModel(
             productName= "초코맛",
             storeName= "GS24",
             address= "고척1동",
             price= 1500,
             parentNo= 1L,
-            count= 2
+            count= 2,
+            memberNo = 1L
         )
 
         //when
-        //val saved = storeProductRepository.save(StoreProduct.create(storeProduct.valueOf())).storeProductNo!!
-
-        coEvery { spRepository.save(any()).storeProductNo } returns 1L
+        coEvery{ storeProductDomainService.register(any()) } returns 1L
         runBlocking { storeProductService.register(storeProduct) }
 
         //then

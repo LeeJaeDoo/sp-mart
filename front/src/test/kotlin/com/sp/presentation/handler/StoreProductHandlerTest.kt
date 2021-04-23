@@ -41,7 +41,7 @@ internal class StoreProductHandlerTest{
     @Test
     fun `상품명으로 상점 리스트 조회`(){
         val request = MockServerHttpRequest
-            .get("/backend/product/koko")
+            .get("/backend/product/1L")
 
         val exchange = MockServerWebExchange
             .from(request)
@@ -66,7 +66,8 @@ internal class StoreProductHandlerTest{
             address= "고척1동",
             price= 1500,
             parentNo= 1L,
-            count= 2
+            count= 2,
+            memberNo = 1L
         )
 
         val request = MockServerHttpRequest
